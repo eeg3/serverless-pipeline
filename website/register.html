@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Serverless Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/theme.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/js/vendor/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container theme-showcase" role="main">
+
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Serverless Template</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li class="dropdown active">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-user fa-lg"></span>&nbsp;<span class="caret"></span></a>
+                  <ul class="dropdown-menu inverse-dropdown">
+                    <li class="active"><a href="/register.html">Register</a></li>
+                    <li><a href="/signin.html">Sign-In</a></li>
+                    <li><a href="/verify.html">Verify</a></li>
+                    <li><a id="signOut" href="/signin.html">Sign out</a></li>
+                  </ul>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div id="noCognitoMessage" class="configMessage" style="display: none;">
+          <div class="backdrop"></div>
+          <div class="panel panel-danger">
+              <div class="panel-heading">
+                  <h3 class="panel-title">No Cognito User Pool Configured</h3>
+              </div>
+              <div class="panel-body">
+                  <p>There is no user pool configured in <a href="/js/config.js">/js/config.js</a>.</p>
+              </div>
+          </div>
+      </div>
+
+      <!-- Main jumbotron -->
+      <div class="jumbotron">
+        <h1>Serverless Template</h1>
+        <p>This is a template showcasing the serverless model using AWS <a href="https://aws.amazon.com/s3/">S3</a>, <a href="https://aws.amazon.com/lambda/">Lambda</a>, <a href="https://aws.amazon.com/cognito/">Cognito<a>,
+          <a href="https://aws.amazon.com/iam/">IAM</a>, <a href="https://aws.amazon.com/dynamodb/">DynamoDB</a>, and <a href="https://aws.amazon.com/api-gateway/">API Gateway</a>. The template also uses
+          <a href="https://getbootstrap.com/">Bootstrap</a> and <a href="http://fontawesome.io/">FontAwesome</a> by default.</p>
+        <p>This template is based on the <a href="https://github.com/awslabs">Amazon Web Services Labs</a>' Serverless
+          Workshop: <a href="https://github.com/awslabs/aws-serverless-workshops/tree/master/WebApplication">Serverless Web Application</a>, but is more stripped down to be less of a demonstration and more to provide an simpler
+          foundation to build upon.  Use the template as a starting point to create something more unique by building on or modifying it.</p>
+      </div>
+
+
+      <div class="page-header">
+        <h1>Register</h1>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">Sign Up</h3>
+            </div>
+            <div class="panel-body">
+              <form id="registrationForm">
+                <input type="email" id="emailInputRegister" placeholder="Email" pattern=".*" required><br />
+                <input type="password" id="passwordInputRegister" placeholder="Password" pattern=".*" required><br />
+                <input type="password" id="password2InputRegister" placeholder="Confirm Password" pattern=".*" required><br />
+                <br />
+                <input type="submit" value="Register">
+              </form>
+            </div>
+          </div>
+        </div><!-- /.col-sm-4 -->
+
+      </div>
+
+
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/vendor/jquery-3.1.0.js"></script>
+    <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/vendor/docs.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/js/vendor/ie10-viewport-bug-workaround.js"></script>
+
+    <script src="js/vendor/aws-cognito-sdk.min.js"></script>
+    <script src="js/vendor/amazon-cognito-identity.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/cognito-auth.js"></script>
+  </body>
+</html>
