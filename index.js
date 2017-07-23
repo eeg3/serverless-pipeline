@@ -12,8 +12,6 @@ exports.handler = (event, context, callback) => {
     }
     const username = event.requestContext.authorizer.claims['cognito:username'];
 
-    var originURL = process.env.ORIGIN_URL || '*';
-
     console.log('Received event: ' + event);
     var requestBody = JSON.parse(event.body);
     console.log('Request body:' + requestBody);
@@ -61,7 +59,7 @@ exports.handler = (event, context, callback) => {
     var done = (err, res) => callback(null, {
         statusCode: err ? '400' : '200',
         headers: {
-            'Access-Control-Allow-Origin': originURL,
+            'Access-Control-Allow-Origin': '*',
         },
         body: err ? err.message : JSON.stringify(res)
     });
@@ -83,7 +81,7 @@ function errorResponse(errorMessage, awsRequestId, callback) {
       Reference: awsRequestId,
     }),
     headers: {
-      'Access-Control-Allow-Origin': originURL,
+      'Access-Control-Allow-Origin': '*',
     },
   });
 }
@@ -93,7 +91,7 @@ function successResponse(data, callback) {
     statusCode: 201,
     body: JSON.stringify(data),
     headers: {
-      'Access-Control-Allow-Origin': originURL,
+      'Access-Control-Allow-Origin': '*',
     },
   });
 }

@@ -23,7 +23,7 @@
         "SAMInputFile": {
             "Type": "String",
             "Description": "The filename for the serverless transform file.",
-            "Default": "serverless.json"
+            "Default": "sam.json"
         },
         "SAMOutputFile": {
             "Type": "String",
