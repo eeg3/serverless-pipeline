@@ -15,6 +15,11 @@
           "Type": "String",
           "Default": "eeg3-serverless-template"
         },
+        "CognitoPool": {
+          "Description": "Name for the Cognito Pool",
+          "Type": "String",
+          "Default": "serverless-pool"
+        },
         "SAMInputFile": {
             "Type": "String",
             "Description": "The filename for the serverless transform file.",
@@ -664,6 +669,136 @@
                     }
                 }
             }
+        },
+        "UserPool": {
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CreateUserPoolFunction",
+                        "Arn"
+                    ]
+                },
+                "Name": {
+                  "Ref": "CognitoPool"
+                }
+            },
+            "Type": "Custom::UserPool"
+        },
+        "UserPoolClient": {
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CreateUserPoolClientFunction",
+                        "Arn"
+                    ]
+                },
+                "Name": {
+                  "Ref": "CognitoPool"
+                },
+                "UserPool": {
+                    "Ref": "UserPool"
+                }
+            },
+            "Type": "Custom::UserPoolClient"
+        },
+        "CognitoConfigRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "Path": "/cognito/",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyName": "CognitoConfig",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Sid": "Logging",
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Sid": "Cognito",
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cognito-idp:CreateUserPool",
+                                        "cognito-idp:DeleteUserPool",
+                                        "cognito-idp:CreateUserPoolClient",
+                                        "cognito-idp:DeleteUserPoolClient"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Sid": "ConfigBucketWriteAccess",
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:PutObject",
+                                        "s3:PutObjectAcl",
+                                        "s3:PutObjectVersionAcl"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::Sub": "arn:aws:s3:::${BucketName}/*"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "CreateUserPoolClientFunction": {
+            "Properties": {
+                "Description": "Creates an Amazon Cognito User Pool Client",
+                "Handler": "index.handler",
+                "Runtime": "python2.7",
+                "Role": {
+                    "Fn::GetAtt": [
+                        "CognitoConfigRole",
+                        "Arn"
+                    ]
+                },
+                "Timeout": 120,
+                "Code": {
+                    "ZipFile": "import json\nimport boto3\nimport cfnresponse\n\ncognito = boto3.client('cognito-idp')\n\ndef create(properties, physical_id):\n  response = cognito.create_user_pool_client(\n      UserPoolId=properties['UserPool'],\n      ClientName=properties['Name'],\n      GenerateSecret=False\n  )\n  return cfnresponse.SUCCESS, response['UserPoolClient']['ClientId']\n\ndef update(properties, physical_id):\n  response = cognito.update_user_pool_client(\n      UserPoolId=properties['UserPool'],\n      ClientId=physical_id,\n      ClientName=properties['Name'],\n      GenerateSecret=False\n  )\n  return cfnresponse.SUCCESS, response['UserPoolClient']['ClientId']\n\ndef delete(properties, physical_id):\n  cognito.delete_user_pool_client(\n    UserPoolId=properties['UserPool'],\n    ClientId=physical_id\n  )\n  return cfnresponse.SUCCESS, physical_id\n\ndef handler(event, context):\n  print \"Received event: %s\" % json.dumps(event)\n\n  status = cfnresponse.FAILED\n  new_physical_id = None\n\n  try:\n    properties = event.get('ResourceProperties')\n    physical_id = event.get('PhysicalResourceId')\n\n    status, new_physical_id = {\n      'Create': create,\n      'Update': update,\n      'Delete': delete\n    }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)\n  except Exception as e:\n    print \"Exception: %s\" % e\n    status = cfnresponse.FAILED\n  finally:\n    cfnresponse.send(event, context, status, {}, new_physical_id)\n"
+                }
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "CreateUserPoolFunction": {
+            "Properties": {
+                "Description": "Creates an Amazon Cognito User Pool",
+                "Handler": "index.handler",
+                "Runtime": "python2.7",
+                "Role": {
+                    "Fn::GetAtt": [
+                        "CognitoConfigRole",
+                        "Arn"
+                    ]
+                },
+                "Timeout": 120,
+                "Code": {
+                    "ZipFile": "import json\nimport boto3\nimport cfnresponse\n\ncognito = boto3.client('cognito-idp')\n\ndef create(properties, physical_id):\n  result = cognito.create_user_pool(\n    PoolName=properties['Name'],\n    AutoVerifiedAttributes=[],\n    AliasAttributes=['email']\n  )\n  return cfnresponse.SUCCESS, result['UserPool']['Id']\n\ndef update(properties, physical_id):\n  cognito.delete_user_pool(UserPoolId=physical_id)\n  return create(properties, physical_id)\n\ndef delete(properties, physical_id):\n  cognito.delete_user_pool(UserPoolId=physical_id)\n  return cfnresponse.SUCCESS, physical_id\n\ndef handler(event, context):\n  print \"Received event: %s\" % json.dumps(event)\n\n  status = cfnresponse.FAILED\n  new_physical_id = None\n\n  try:\n    properties = event.get('ResourceProperties')\n    physical_id = event.get('PhysicalResourceId')\n\n    status, new_physical_id = {\n      'Create': create,\n      'Update': update,\n      'Delete': delete\n    }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)\n  except Exception as e:\n    print \"Exception: %s\" % e\n    status = cfnresponse.FAILED\n  finally:\n    cfnresponse.send(event, context, status, {}, new_physical_id)\n"
+                }
+            },
+            "Type": "AWS::Lambda::Function"
         }
     },
     "Outputs": {
