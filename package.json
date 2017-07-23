@@ -1,0 +1,13 @@
+{
+  "name": "serverless-pipeline",
+  "version": "1.0.0",
+  "dependencies": {
+    "moment": "^2.16.0"
+  },
+  "description": "Serverless Pipeline Template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "earl@eeg3.net"
+}

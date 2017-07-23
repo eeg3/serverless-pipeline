@@ -12,7 +12,6 @@
             "Properties": {
                 "Handler": "index.handler",
                 "Runtime": "nodejs4.3",
-                "Policies": "AmazonDynamoDBReadOnlyAccess",
                 "CodeUri": "./",
                 "Environment": {
                     "Variables": {
@@ -25,7 +24,7 @@
                     "GetResource": {
                         "Type": "Api",
                         "Properties": {
-                            "Path": "/projects",
+                            "Path": "/sam",
                             "Method": "get"
                         }
                     }

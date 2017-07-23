@@ -1,10 +1,9 @@
-const randomBytes = require('crypto').randomBytes;
-
-const AWS = require('aws-sdk');
-
-const ddb = new AWS.DynamoDB.DocumentClient();
+'use strict';
+var moment = require('moment');
 
 exports.handler = (event, context, callback) => {
+
+    var originURL = process.env.ORIGIN_URL || '*';
 
     if (!event.requestContext.authorizer) {
       errorResponse('Authorization not configured', context.awsRequestId, callback);
@@ -16,61 +15,40 @@ exports.handler = (event, context, callback) => {
     var requestBody = JSON.parse(event.body);
     console.log('Request body:' + requestBody);
 
-    switch (event.httpMethod) {
-        case 'GET':
-            var params = {
-                TableName: 'Projects'
-            };
-            ddb.scan(params, function(err, data) {
-                if (err) {
-                    errorResponse(err.message, context.awsRequestId, callback);
-                } else {
-                    successResponse(data, callback);
-                }
-            });
-            break;
-        case 'POST':
-            var params = {
-                TableName: 'Projects',
-                Item: {
-                    ProjectId: toUrlString(randomBytes(16)),
-                    User: username,
-                    Date: new Date().toISOString(),
-                }
-            };
-            ddb.put(params, function(err, data) {
-                if (err) {
-                    errorResponse(err.message, context.awsRequestId, callback);
-                } else {
-                    successResponse("Success", callback);
-                }
-            });
-            break;
-        //case 'PUT':
-        //    dynamo.updateItem(JSON.parse(event.body), done);
-        //    break;
-        //case 'DELETE':
-        //    dynamo.deleteItem(JSON.parse(event.body), done);
-        //    break;
-        default:
-            done(new Error(`Unsupported method "${event.httpMethod}"`));
-    }
+    emitLambdaAge();
 
-    var done = (err, res) => callback(null, {
-        statusCode: err ? '400' : '200',
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-        },
-        body: err ? err.message : JSON.stringify(res)
+    // This variable can be updated and checked in to your repository
+    // to update the number of SAM squirrels on the screen.
+    var samCount = 15;
+
+    // Or you can update your Lambda function's environment variable.
+    var samMultiplier = process.env.SAM_MULTIPLIER || 1;
+
+    var totalSAMs = samCount * samMultiplier;
+
+    console.log('The number of SAMs to show: ' + samCount);
+    console.log('Multiplier to apply to SAMs: ' + samMultiplier);
+    console.log('Total number of SAMs to show: ' + totalSAMs);
+
+    callback(null, {
+        "statusCode": 200,
+        "body": totalSAMs,
+        "headers":
+        {
+            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+            "Access-Control-Allow-Methods": "GET,OPTIONS",
+            "Access-Control-Allow-Origin": "*"
+        }
     });
+}
 
-};
+function emitLambdaAge() {
+    var now = moment();
+    var lambdaAnnouncement = moment('2014-11-04');
 
-function toUrlString(buffer) {
-    return buffer.toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=/g, '');
+    var daysOld = now.diff(lambdaAnnouncement, 'days');
+
+    console.log('Lambda is ' + daysOld + ' days old!');
 }
 
 function errorResponse(errorMessage, awsRequestId, callback) {
@@ -80,16 +58,6 @@ function errorResponse(errorMessage, awsRequestId, callback) {
       Error: errorMessage,
       Reference: awsRequestId,
     }),
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
-}
-
-function successResponse(data, callback) {
-  callback(null, {
-    statusCode: 201,
-    body: JSON.stringify(data),
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
