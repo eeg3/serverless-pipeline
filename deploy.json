@@ -33,7 +33,7 @@
         "StagingFile": {
             "Type": "String",
             "Description": "The cloudformation staging file. Leave empty if no staging file is needed.",
-            "Default": "beta.json"
+            "Default": "staging.json"
         },
         "CodeBuildImage": {
             "Type": "String",
@@ -74,7 +74,7 @@
         }
     },
     "Resources": {
-      "S3Bucket": {
+        "S3Bucket": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "PublicRead",
@@ -671,35 +671,18 @@
             }
         },
         "UserPool": {
-            "Properties": {
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "CreateUserPoolFunction",
-                        "Arn"
-                    ]
-                },
-                "Name": {
-                  "Ref": "CognitoPool"
-                }
-            },
-            "Type": "Custom::UserPool"
+          "Type" : "AWS::Cognito::UserPool",
+          "Properties" : {
+            "UserPoolName" : { "Ref" : "CognitoPool" },
+          }
         },
         "UserPoolClient": {
-            "Properties": {
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "CreateUserPoolClientFunction",
-                        "Arn"
-                    ]
-                },
-                "Name": {
-                  "Ref": "CognitoPool"
-                },
-                "UserPool": {
-                    "Ref": "UserPool"
-                }
-            },
-            "Type": "Custom::UserPoolClient"
+          "Type" : "AWS::Cognito::UserPoolClient",
+          "Properties" : {
+            "ClientName" : "WebApp",
+            "GenerateSecret" : "false",
+            "UserPoolId" : { "Ref" : "UserPool" },
+          }
         },
         "CognitoConfigRole": {
             "Type": "AWS::IAM::Role",
@@ -763,42 +746,6 @@
                     }
                 ]
             }
-        },
-        "CreateUserPoolClientFunction": {
-            "Properties": {
-                "Description": "Creates an Amazon Cognito User Pool Client",
-                "Handler": "index.handler",
-                "Runtime": "python2.7",
-                "Role": {
-                    "Fn::GetAtt": [
-                        "CognitoConfigRole",
-                        "Arn"
-                    ]
-                },
-                "Timeout": 120,
-                "Code": {
-                    "ZipFile": "import json\nimport boto3\nimport cfnresponse\n\ncognito = boto3.client('cognito-idp')\n\ndef create(properties, physical_id):\n  response = cognito.create_user_pool_client(\n      UserPoolId=properties['UserPool'],\n      ClientName=properties['Name'],\n      GenerateSecret=False\n  )\n  return cfnresponse.SUCCESS, response['UserPoolClient']['ClientId']\n\ndef update(properties, physical_id):\n  response = cognito.update_user_pool_client(\n      UserPoolId=properties['UserPool'],\n      ClientId=physical_id,\n      ClientName=properties['Name'],\n      GenerateSecret=False\n  )\n  return cfnresponse.SUCCESS, response['UserPoolClient']['ClientId']\n\ndef delete(properties, physical_id):\n  cognito.delete_user_pool_client(\n    UserPoolId=properties['UserPool'],\n    ClientId=physical_id\n  )\n  return cfnresponse.SUCCESS, physical_id\n\ndef handler(event, context):\n  print \"Received event: %s\" % json.dumps(event)\n\n  status = cfnresponse.FAILED\n  new_physical_id = None\n\n  try:\n    properties = event.get('ResourceProperties')\n    physical_id = event.get('PhysicalResourceId')\n\n    status, new_physical_id = {\n      'Create': create,\n      'Update': update,\n      'Delete': delete\n    }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)\n  except Exception as e:\n    print \"Exception: %s\" % e\n    status = cfnresponse.FAILED\n  finally:\n    cfnresponse.send(event, context, status, {}, new_physical_id)\n"
-                }
-            },
-            "Type": "AWS::Lambda::Function"
-        },
-        "CreateUserPoolFunction": {
-            "Properties": {
-                "Description": "Creates an Amazon Cognito User Pool",
-                "Handler": "index.handler",
-                "Runtime": "python2.7",
-                "Role": {
-                    "Fn::GetAtt": [
-                        "CognitoConfigRole",
-                        "Arn"
-                    ]
-                },
-                "Timeout": 120,
-                "Code": {
-                    "ZipFile": "import json\nimport boto3\nimport cfnresponse\n\ncognito = boto3.client('cognito-idp')\n\ndef create(properties, physical_id):\n  result = cognito.create_user_pool(\n    PoolName=properties['Name'],\n    AutoVerifiedAttributes=[],\n    AliasAttributes=['email']\n  )\n  return cfnresponse.SUCCESS, result['UserPool']['Id']\n\ndef update(properties, physical_id):\n  cognito.delete_user_pool(UserPoolId=physical_id)\n  return create(properties, physical_id)\n\ndef delete(properties, physical_id):\n  cognito.delete_user_pool(UserPoolId=physical_id)\n  return cfnresponse.SUCCESS, physical_id\n\ndef handler(event, context):\n  print \"Received event: %s\" % json.dumps(event)\n\n  status = cfnresponse.FAILED\n  new_physical_id = None\n\n  try:\n    properties = event.get('ResourceProperties')\n    physical_id = event.get('PhysicalResourceId')\n\n    status, new_physical_id = {\n      'Create': create,\n      'Update': update,\n      'Delete': delete\n    }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)\n  except Exception as e:\n    print \"Exception: %s\" % e\n    status = cfnresponse.FAILED\n  finally:\n    cfnresponse.send(event, context, status, {}, new_physical_id)\n"
-                }
-            },
-            "Type": "AWS::Lambda::Function"
         }
     },
     "Outputs": {
@@ -806,7 +753,7 @@
             "Value": { "Ref": "S3Bucket" },
             "Description": "The created bucket name"
         },
-        "WebsiteURL": {
+        "OriginURL": {
             "Value": {
                 "Fn::GetAtt": [
                     "S3Bucket",
@@ -830,6 +777,14 @@
                 ]
             },
             "Description": "Name of the S3 bucket to hold website content"
+        },
+        "UserPoolId": {
+          "Value": { "Ref" : "UserPool" },
+          "Description": "User Pool ID"
+        },
+        "UserPoolClientId": {
+          "Value": { "Ref" : "UserPoolClient" },
+          "Description": "User Pool Client ID"
         }
     }
 }

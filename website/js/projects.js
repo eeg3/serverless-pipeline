@@ -15,49 +15,6 @@ var authToken;
       window.location.href = '/signin.html';
   });
 
-  /*
-  // GET
-  $("#reqButton").click(function(){
-      $.ajax({
-        url: _config.api.invokeUrl + '/projects',
-        headers: {
-            Authorization: authToken
-        },
-        success: function(result){
-          console.log(result);
-          displayUpdate(result.Project);
-        }
-      });
-  });
-
-  // POST
-  $("#postButton").click(function() {
-    $.ajax({
-        method: 'POST',
-        url: _config.api.invokeUrl + '/projects',
-        headers: {
-            Authorization: authToken
-        },
-        data: JSON.stringify({
-            PickupLocation: {
-                Latitude: "abc",
-                Longitude: "123"
-            }
-        }),
-        contentType: 'application/json',
-        success: function(result) {
-          console.log(result);
-          displayUpdate(result);
-        },
-        error: function ajaxError(jqXHR, textStatus, errorThrown) {
-            console.error('Error requesting ride: ', textStatus, ', Details: ', errorThrown);
-            console.error('Response: ', jqXHR.responseText);
-            alert('An error occured when requesting:\n' + jqXHR.responseText);
-        }
-    });
-  });
-  */
-
   var height = $(window).height();
   var width = $(window).width();
 
