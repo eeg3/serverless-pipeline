@@ -15,9 +15,7 @@
                 "CodeUri": "./",
                 "Environment": {
                     "Variables": {
-                        "ORIGIN_URL": {
-                            "Ref": "OriginUrl"
-                        }
+                        "ORIGIN_URL": "*"
                     }
                 },
                 "Events": {
