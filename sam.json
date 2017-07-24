@@ -3,7 +3,8 @@
     "Parameters": {
         "OriginUrl": {
             "Description": "The origin url to allow CORS requests from. This will be the base URL of the static website.",
-            "Type": "String"
+            "Type": "String",
+            "Default": "*"
         }
     },
     "Resources": {
@@ -15,7 +16,9 @@
                 "CodeUri": "./",
                 "Environment": {
                     "Variables": {
-                        "ORIGIN_URL": "*"
+                        "ORIGIN_URL": "{
+                            "Ref": "OriginUrl"
+                        }"
                     }
                 },
                 "Events": {
