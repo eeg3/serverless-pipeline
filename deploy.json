@@ -30,11 +30,6 @@
             "Description": "The filename for the output file from the buildspec file.",
             "Default": "post-package.yaml"
         },
-        "StagingFile": {
-            "Type": "String",
-            "Description": "The cloudformation staging file. Leave empty if no staging file is needed.",
-            "Default": "staging.json"
-        },
         "CodeBuildImage": {
             "Type": "String",
             "Default": "aws/codebuild/nodejs:7.0.0",
@@ -57,20 +52,6 @@
             "NoEcho": true,
             "Type": "String",
             "Description": "Secret. OAuthToken with access to Repo. Long string of characters and digits. Go to https://github.com/settings/tokens"
-        }
-    },
-    "Conditions": {
-        "HasStagingVariables": {
-            "Fn::Not": [
-                {
-                    "Fn::Equals": [
-                        {
-                            "Ref": "StagingFile"
-                        },
-                        ""
-                    ]
-                }
-            ]
         }
     },
     "Resources": {
@@ -627,15 +608,6 @@
                                     "Capabilities": "CAPABILITY_NAMED_IAM",
                                     "TemplatePath": {
                                         "Fn::Sub": "${AppName}-BuildArtifact::${SAMOutputFile}"
-                                    },
-                                    "TemplateConfiguration": {
-                                        "Fn::If": [
-                                            "HasStagingVariables",
-                                            {
-                                                "Fn::Sub": "${AppName}-BuildArtifact::${StagingFile}"
-                                            },
-                                            ""
-                                        ]
                                     }
                                 },
                                 "RunOrder": 1

@@ -1,0 +1,12 @@
+Things still manual:
+- Create Cognito User Pool Authorizer on API Gateway
+- Edit GET to use Authorizer
+- Redeploy API
+- Update config.js
+
+Bug:
+- API Gateway / Lambda call is not working with CORS
+
+https://github.com/awslabs/aws-serverless-workshops/tree/master/WebApplication/
+https://github.com/awslabs/serverless-application-model/issues/23
+https://aws.amazon.com/blogs/compute/introducing-simplified-serverless-application-deplyoment-and-management/
