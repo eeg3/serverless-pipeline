@@ -7,7 +7,35 @@ The parent projects this project uses are:
 
 ## Functionality
 
-1. The process starts by deploying the deploy.json file inside CloudFormation.
+The process starts by deploying the deploy.json file inside CloudFormation. The deploy.json template will ask for the following parameters:
+
+1. AppName: Name of the Application.
+2. BucketName: Name of the S3 Bucket to create that should house the website. This must be unique.
+3. CodeBuildImage: Name of the CodeBuild container image to use. Default should be fine, but customizable if desired.
+4. CognitoPool: Name of the Cognito Pool to create to use for authentication purposes.
+5. GitHubRepoBranch: Branch of the GitHub repo that houses the application code.
+6. GitHubRepName: Name of the GitHub repo that jouses the application code.
+7. GitHubToken: GitHub token to use for authentication to the GitHub account. Configurable inside Github: https://github.com/settings/tokens. Token needs repo_hook permissions.
+8. GitHubUser: GitHub Username.
+9. SAMInputFile: Serverless transform file. By default, this is the included sam.json file.
+10. SAMOutputFile: The filename for the output file from the buildspec file. This doesn't need to be changed unless the artifact file inside the buildspec.yml file is changed to a different name.
+
+The CloudFormation deployment will warn that it is created IAM permissions. This is because it creates roles and policies for the pipeline to use.
+
+The initial CloudFormation Stack should be created after deploy.json is launched. Once that stack is created, the CodePipeline will then create the pipeline stack after a period of time. The pipeline stack will be called ``{parent-stack}-serverless-stack``.
+
+Within the parent Stack, the Outputs tab should display the following items:
+
+1. UserPoolClientId
+2. BucketName
+3. UserPoolId
+4. OriginURL
+
+Within the child pipeline Stack, the Outputs tab should display the following items:
+
+1. ApiUrl
+
+The UserPoolClientId, UserPoolId, OriginURL, and ApiUrl should all now be placed into the website/js/config.js file so that the website knows how to use the services provisioned; this is a one-time process. Once the config.js file is updated, push the change to the GitHub repo; this will automatically update the application with the new config.
 
 ## Services
 
@@ -48,6 +76,7 @@ The code for the pipeline resides within the root.
 3. sam.json: CloudFormation Serverless Transformation template for SAM.
 4. package.json: Package file for the Lambda function.
 5. index.js: Node.js code for Lambda function.
+6. Added the API URL into the Stack Outputs.
 
 
 ## Modifications from Original Sources
@@ -71,8 +100,12 @@ The code for the pipeline resides within the root.
 5. Merged website into Serverless Web Application Workshop site.
 6. Integrated CloudFormation functionality from Serverless Web Application Workshop into deployment CloudFormation template.
 
-## ToDo
+## Miscellaneous
 
-1. Rename Projects to Squirrel Farm
-2. Add authorization back to API Gateway
-3. Remove some legacy code from farm.html
+## Notes
+
+1. If you want to delete the stack, make sure to delete the pipeline-created stack first and then delete the parent stack. If you delete the parent first, the IAM role is deleted and you'll have to tinker around with permissions to get the stack to actually gracefully delete.
+
+### (Optional) Add API Gateway Authentication
+
+1. Pending

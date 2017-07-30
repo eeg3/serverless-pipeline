@@ -734,22 +734,6 @@
             },
             "Description": "URL for the website hosted on S3"
         },
-        "S3BucketSecureURL": {
-            "Value": {
-                "Fn::Sub": [
-                    "https://${Domain}",
-                    {
-                        "Domain": {
-                            "Fn::GetAtt": [
-                                "S3Bucket",
-                                "DomainName"
-                            ]
-                        }
-                    }
-                ]
-            },
-            "Description": "Name of the S3 bucket to hold website content"
-        },
         "UserPoolId": {
           "Value": { "Ref" : "UserPool" },
           "Description": "User Pool ID"

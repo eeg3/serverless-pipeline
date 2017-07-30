@@ -30,5 +30,26 @@
                 }
             }
         }
+    },
+    "Outputs": {
+        "ApiUrl": {
+            "Description": "URL of your API endpoint",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Ref": "ServerlessRestApi"
+                        },
+                        ".execute-api.",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        ".amazonaws.com/Prod"
+                    ]
+                ]
+            }
+        }
     }
 }
