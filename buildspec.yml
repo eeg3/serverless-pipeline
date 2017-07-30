@@ -15,4 +15,3 @@ containers:
         artifacts:
             files:
                 - post-package.yaml
-                - beta.json

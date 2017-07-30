@@ -1,19 +1,22 @@
 'use strict';
 var moment = require('moment');
 
+// Commented-out code is placeholder for authentication through API Gateway & Cognito.
+// Pending until CORS through SAM is better supported.
+// See: https://github.com/awslabs/serverless-application-model/issues/23
+
+
 exports.handler = (event, context, callback) => {
 
     var originURL = process.env.ORIGIN_URL || '*';
 
+    /*
     if (!event.requestContext.authorizer) {
       errorResponse('Authorization not configured', context.awsRequestId, callback);
       return;
     }
     const username = event.requestContext.authorizer.claims['cognito:username'];
-
-    console.log('Received event: ' + event);
-    var requestBody = JSON.parse(event.body);
-    console.log('Request body:' + requestBody);
+    */
 
     emitLambdaAge();
 
@@ -37,7 +40,7 @@ exports.handler = (event, context, callback) => {
         {
             "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
             "Access-Control-Allow-Methods": "GET,OPTIONS",
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": originURL
         }
     });
 }
@@ -51,6 +54,8 @@ function emitLambdaAge() {
     console.log('Lambda is ' + daysOld + ' days old!');
 }
 
+
+/*
 function errorResponse(errorMessage, awsRequestId, callback) {
   callback(null, {
     statusCode: 500,
@@ -63,3 +68,4 @@ function errorResponse(errorMessage, awsRequestId, callback) {
     },
   });
 }
+*/

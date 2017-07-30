@@ -107,12 +107,14 @@ var authToken;
   // Every X seconds as defined in the variable TIME_BETWEEN_COUNT_UPDATE_MS, call our API endpoint to tell use how many
   // SAMs should be on the screen.
   setInterval(() => {
-      // Make frontend call to lambda
       $.ajax({
         url: GET_SAM_COUNT_URL,
-        headers: {
+        // Placeholder for Lambda authentication when CORS is better supported through SAM.
+        // See: https://github.com/awslabs/serverless-application-model/issues/23
+        // Currently, page is redirected back to sign-ni page based on presence of auth token.
+        /* headers: {
             Authorization: authToken
-        },
+        }, */
         success: function(data) {
             DESIRED_SAM_COUNT = data;
         }
