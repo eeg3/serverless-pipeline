@@ -29,6 +29,15 @@
                     }
                 }
             }
+        },
+        "ConfigLambdaPermission": {
+          "Type": "AWS::Lambda::Permission",
+          "DependsOn": "GetResource",
+          "Properties": {
+            "Action": "Lambda:InvokeFunction",
+            "FunctionName": { "Ref": "GetSAMPartyCount" },
+            "Principal": "apigateway.amazonaws.com"
+          }
         }
     }
 }
