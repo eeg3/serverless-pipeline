@@ -5,6 +5,16 @@ exports.handler = (event, context, callback) => {
 
     var originURL = process.env.ORIGIN_URL || '*';
 
+    if (!event.requestContext.authorizer) {
+      errorResponse('Authorization not configured', context.awsRequestId, callback);
+      return;
+    }
+    const username = event.requestContext.authorizer.claims['cognito:username'];
+
+    console.log('Received event: ' + event);
+    var requestBody = JSON.parse(event.body);
+    console.log('Request body:' + requestBody);
+
     emitLambdaAge();
 
     // This variable can be updated and checked in to your repository
@@ -39,4 +49,17 @@ function emitLambdaAge() {
     var daysOld = now.diff(lambdaAnnouncement, 'days');
 
     console.log('Lambda is ' + daysOld + ' days old!');
+}
+
+function errorResponse(errorMessage, awsRequestId, callback) {
+  callback(null, {
+    statusCode: 500,
+    body: JSON.stringify({
+      Error: errorMessage,
+      Reference: awsRequestId,
+    }),
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
 }
