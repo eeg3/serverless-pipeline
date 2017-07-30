@@ -115,8 +115,10 @@ var authToken;
           DESIRED_SAM_COUNT = data;
       });
       */
+
       $.ajax({
         url: GET_SAM_COUNT_URL,
+        dataType: 'jsonp',
         headers: {
             Authorization: authToken
         },
