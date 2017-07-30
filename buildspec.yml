@@ -14,5 +14,5 @@ containers:
                     - aws s3 sync website/ "s3://${S3_WEBSITE_BUCKET}"
         artifacts:
             files:
-                - lambda.json
-                - beta.json
+                - build.json
+                - buildconfig.json
