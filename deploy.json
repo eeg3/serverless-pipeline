@@ -28,7 +28,7 @@
         "SAMOutputFile": {
             "Type": "String",
             "Description": "The filename for the output file from the buildspec file.",
-            "Default": "post-package.yaml"
+            "Default": "lambda.json"
         },
         "CodeBuildImage": {
             "Type": "String",
