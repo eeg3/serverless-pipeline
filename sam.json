@@ -8,6 +8,21 @@
         }
     },
     "Resources": {
+        "ApiGatewayApi": {
+            "Type": "AWS::Serverless::Api",
+            "Properties": {
+              "DefinitionUri": "./swagger.yaml",
+              "StageName": "Prod",
+              "Variables": {
+                "LambdaFunctionName": {
+                  "Fn::GetAtt": [
+                      "GetSAMPartyCount",
+                      "Arn"
+                  ]
+                }
+              }
+            }
+        },
         "GetSAMPartyCount": {
             "Type": "AWS::Serverless::Function",
             "Properties": {
@@ -23,8 +38,9 @@
                     "GetResource": {
                         "Type": "Api",
                         "Properties": {
-                            "Path": "/sam",
-                            "Method": "get"
+                            "RestApiId": { "Ref": "ApiGatewayApi" },
+                            "Path": "/{proxy+}",
+                            "Method": "ANY"
                         }
                     }
                 }

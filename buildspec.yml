@@ -16,3 +16,4 @@ containers:
             files:
                 - post-package.yaml
                 - beta.json
+                - swagger.yaml
