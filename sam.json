@@ -32,7 +32,7 @@
         },
         "ConfigLambdaPermission": {
           "Type": "AWS::Lambda::Permission",
-          "DependsOn": "GetResource",
+          "DependsOn": "GetSAMPartyCount",
           "Properties": {
             "Action": "Lambda:InvokeFunction",
             "FunctionName": { "Ref": "GetSAMPartyCount" },
