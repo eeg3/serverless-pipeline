@@ -108,10 +108,21 @@ var authToken;
   // SAMs should be on the screen.
   setInterval(() => {
       // Make frontend call to lambda
+      /*
       $.get({
           url: GET_SAM_COUNT_URL
       }).done(function(data) {
           DESIRED_SAM_COUNT = data;
+      });
+      */
+      $.ajax({
+        url: GET_SAM_COUNT_URL,
+        headers: {
+            Authorization: authToken
+        },
+        success: function(data) {
+            DESIRED_SAM_COUNT = data;
+        }
       });
   }, TIME_BETWEEN_COUNT_UPDATE_MS);
 

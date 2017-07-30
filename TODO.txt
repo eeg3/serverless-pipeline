@@ -3,10 +3,10 @@ Things still manual:
 - Edit GET to use Authorizer
 - Redeploy API
 - Update config.js
-
-Bug:
-- API Gateway / Lambda call is not working with CORS
+- Figure out why $.ajax() fails but $.get() works with CORS
+- Figure out why Cognito email isnt sending verification token
 
 https://github.com/awslabs/aws-serverless-workshops/tree/master/WebApplication/
 https://github.com/awslabs/serverless-application-model/issues/23
 https://aws.amazon.com/blogs/compute/introducing-simplified-serverless-application-deplyoment-and-management/
+https://github.com/awslabs/aws-serverless-samfarm
