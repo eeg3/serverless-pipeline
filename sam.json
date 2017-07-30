@@ -33,7 +33,7 @@
     },
     "Outputs": {
         "ApiUrl": {
-            "Description": "URL of your API endpoint",
+            "Description": "URL of API Endpoint",
             "Value": {
                 "Fn::Join": [
                     "",

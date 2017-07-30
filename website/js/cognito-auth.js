@@ -4,7 +4,7 @@ var Dashboard = window.Dashboard || {};
 
 (function($) {
     var signinUrl = '/signin.html';
-    var redirectLoginUrl = '/projects.html';
+    var redirectLoginUrl = '/farm.html';
 
     var poolData = {
         UserPoolId: _config.cognito.userPoolId,

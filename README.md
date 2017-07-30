@@ -24,7 +24,7 @@ The CloudFormation deployment will warn that it is created IAM permissions. This
 
 The initial CloudFormation Stack should be created after deploy.json is launched. Once that stack is created, the CodePipeline will then create the pipeline stack after a period of time. The pipeline stack will be called ``{parent-stack}-serverless-stack``.
 
-Within the parent Stack, the Outputs tab should display the following items:
+After initial deployment, the site will not be fully functional as the config.js file still needs to be updated so the site knows how to utilize the services. Within the parent Stack, the Outputs tab should display the following items:
 
 1. UserPoolClientId
 2. BucketName
@@ -35,7 +35,15 @@ Within the child pipeline Stack, the Outputs tab should display the following it
 
 1. ApiUrl
 
-The UserPoolClientId, UserPoolId, OriginURL, and ApiUrl should all now be placed into the website/js/config.js file so that the website knows how to use the services provisioned; this is a one-time process. Once the config.js file is updated, push the change to the GitHub repo; this will automatically update the application with the new config.
+The UserPoolClientId, UserPoolId, OriginURL, and ApiUrl should all now be placed into the website/js/config.js file so that the website knows how to use the services provisioned; this is a one-time process. Once the config.js file is updated, push the change to the GitHub repo; this will automatically update the application with the new config through the pipeline.
+
+The site should now work as expected. Browse to the URL defined within OriginURL, and select "Register" from the top right drop-down. Enter an email address and password, and select Register. You will receive a verification code from Cognito. Once received, select "Verify" from the top right drop-down; on the verify page, enter your email and verification code provided.
+
+Try browsing to the "Squirrel Farm". If you have not logged in, you should be redirected to the Sign-In page. Enter your credentials, and you should now be taken to the "Squirrel Farm". Within the graphic in the middle of the page, one SAM Squirrel should initially be displayed, and then it should increase to 15 shortly thereafter, once it has reached out and asked API Gateway/Lambda how many it should display.
+
+You can also browse directly to the API Gateway/Lambda function and see how many Squirrels should be displayed. You can do this by browsing to the "ApiUrl" listed in the pipeline Stack and appending '/sam' to the end (e.g. https://od3tfr5l1a.execute-api.us-east-1.amazonaws.com/Prod/sam). By default, it should return '15'.
+
+As the website or serverless function is updated, simply perform the modifications and then push them to the GitHub repo. Once checked in to Github, CodePipeline will handle the rest automatically. To test this functionality, browse to the CodePipeline page and view the pipeline while pushing a change. The pipeline will show the process from Source -> Build -> Deploy. If there are any failures, they will be visible within the pipeline.
 
 ## Services
 
@@ -109,3 +117,9 @@ The code for the pipeline resides within the root.
 ### (Optional) Add API Gateway Authentication
 
 1. Pending
+
+## ToDo
+
+1. Make register.html redirect to signin.html after submit
+2. Fix verification in Cognito
+3. Cleanup farm.html
