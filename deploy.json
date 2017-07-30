@@ -28,12 +28,7 @@
         "SAMOutputFile": {
             "Type": "String",
             "Description": "The filename for the output file from the buildspec file.",
-            "Default": "build.json"
-        },
-        "BuildConfig": {
-            "Type": "String",
-            "Description": "Configuration file for the build CloudFormation template.",
-            "Default": "buildconfig.json"
+            "Default": "post-package.yaml"
         },
         "CodeBuildImage": {
             "Type": "String",
@@ -251,19 +246,17 @@
                                 "iam:DeleteRole"
                             ],
                             "Resource": {
-                                "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/*"
+                                "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/${AppName}-*"
                             },
                             "Effect": "Allow"
                         },
                         {
                             "Action": [
-                                "iam:CreatePolicy",
                                 "iam:AttachRolePolicy",
-                                "iam:PutRolePolicy",
                                 "iam:DetachRolePolicy"
                             ],
                             "Resource": {
-                                "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/*"
+                                "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/${AppName}-*"
                             },
                             "Effect": "Allow"
                         },
@@ -615,9 +608,6 @@
                                     "Capabilities": "CAPABILITY_NAMED_IAM",
                                     "TemplatePath": {
                                         "Fn::Sub": "${AppName}-BuildArtifact::${SAMOutputFile}"
-                                    },
-                                    "TemplateConfiguration": {
-                                        "Fn::Sub": "${AppName}-BuildArtifact::${BuildConfig}"
                                     }
                                 },
                                 "RunOrder": 1
