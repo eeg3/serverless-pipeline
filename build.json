@@ -15,7 +15,7 @@
       "Properties": {
         "Code": {
             "S3Bucket": { "Ref": "BucketName" },
-            "S3Key": "lambda.zip"
+            "S3Key": "lambda1.zip"
         },
         "Description": "A greeting function",
         "FunctionName": "GreetingLambda",
