@@ -9,6 +9,8 @@ containers:
         phases:
             during_build:
                 commands:
+                    - zip -j lambda.zip lambda/*
+                    - aws s3 cp lambda.zip "s3://${S3_ARTIFACT_BUCKET}"
                     - aws s3 sync website/ "s3://${S3_WEBSITE_BUCKET}"
         artifacts:
             files:
