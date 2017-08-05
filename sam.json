@@ -1,5 +1,6 @@
 {
     "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "Serverless Stack and Pipeline",
     "Parameters": {
         "OriginUrl": {
             "Description": "The origin url to allow CORS requests from. This will be the base URL of the static website.",

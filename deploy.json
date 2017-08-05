@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Cloudformation template for CI/CD Serverless application.",
+    "Description": "Foundational Services for Serverless Pipeline",
     "Parameters": {
         "AppName": {
             "Type": "String",
