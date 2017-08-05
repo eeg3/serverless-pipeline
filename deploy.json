@@ -655,6 +655,12 @@
           "Type" : "AWS::Cognito::UserPool",
           "Properties" : {
             "UserPoolName" : { "Ref" : "CognitoPool" },
+            "AutoVerifiedAttributes": [
+              "email"
+              ],
+            "EmailVerificationMessage": "Your verification code is {####}.",
+            "EmailVerificationSubject": "Your verification code",
+
           }
         },
         "UserPoolClient": {
