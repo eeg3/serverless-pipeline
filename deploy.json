@@ -232,6 +232,15 @@
                         },
                         {
                             "Action": [
+                                "lambda:ListTags",
+                                "lambda:TagResource",
+                                "lambda:UntagResource"
+                            ],
+                            "Resource": "*",
+                            "Effect": "Allow"
+                        },
+                        {
+                            "Action": [
                                 "apigateway:*"
                             ],
                             "Resource": {

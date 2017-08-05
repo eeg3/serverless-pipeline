@@ -107,6 +107,7 @@ The code for the pipeline resides within the root.
 4. Removed Template Configuration file (beta.json) for simplicity.
 5. Merged website into Serverless Web Application Workshop site.
 6. Integrated CloudFormation functionality from Serverless Web Application Workshop into deployment CloudFormation template.
+7. Added some additional IAM permissions to allow tagging of Lambda functions.
 
 ## Miscellaneous
 

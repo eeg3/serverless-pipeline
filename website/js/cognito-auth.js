@@ -139,6 +139,7 @@ var Dashboard = window.Dashboard || {};
             var cognitoUser = result.user;
             console.log('user name is ' + cognitoUser.getUsername());
             alert('Registration successful. Please check your email for your verification code');
+            window.location.href = signinUrl;
         };
         var onFailure = function registerFailure(err) {
             alert(err);
