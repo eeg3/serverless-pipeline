@@ -118,9 +118,3 @@ The code for the pipeline resides within the root.
 ### (Optional) Add API Gateway Authentication
 
 1. Pending
-
-## ToDo
-
-1. Make register.html redirect to signin.html after submit
-2. Fix verification in Cognito
-3. Cleanup farm.html

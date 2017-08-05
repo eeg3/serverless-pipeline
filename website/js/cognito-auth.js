@@ -4,6 +4,7 @@ var Dashboard = window.Dashboard || {};
 
 (function($) {
     var signinUrl = '/signin.html';
+    var verifyUrl = '/verify.html';
     var redirectLoginUrl = '/farm.html';
 
     var poolData = {
@@ -138,8 +139,8 @@ var Dashboard = window.Dashboard || {};
         var onSuccess = function registerSuccess(result) {
             var cognitoUser = result.user;
             console.log('user name is ' + cognitoUser.getUsername());
-            alert('Registration successful. Please check your email for your verification code');
-            window.location.href = signinUrl;
+            alert('Registration successful. Please check your email for your verification code.');
+            window.location.href = verifyUrl;
         };
         var onFailure = function registerFailure(err) {
             alert(err);
