@@ -115,6 +115,9 @@ The code for the pipeline resides within the root.
 
 1. If you want to delete the stack, make sure to delete the pipeline-created stack first and then delete the parent stack. If you delete the parent first, the IAM role is deleted and you'll have to tinker around with permissions to get the stack to actually gracefully delete.
 
-### (Optional) Add API Gateway Authentication
+### (Optional) Add API Gateway Authentication for Lambda Function
 
-1. Pending
+1. If you'd like to provide authentication for the Lambda function, follow Module 4 of the Serverless Web Application tutorial: [RESTful APIs with AWS Lambda and Amazon API Gateway](https://github.com/awslabs/aws-serverless-workshops/tree/master/WebApplication/4_RESTfulAPIs).
+2. Replace the API Gateway address that is generated from CloudFormation with the manually created API Gateway address inside config.js.
+3. Edit the $.ajax() call within farm.js to pass the authorization token within the AJAX call.
+4. Uncomment the authorization code within the Lambda function inside index.js.
