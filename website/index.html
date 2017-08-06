@@ -55,10 +55,10 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="fa fa-user fa-lg"></span>&nbsp;<span class="caret"></span></a>
                   <ul class="dropdown-menu inverse-dropdown">
-                    <li><a href="/register.html">Register</a></li>
-                    <li><a href="/signin.html">Sign-In</a></li>
-                    <li><a href="/verify.html">Verify</a></li>
-                    <li><a id="signOut" href="/signin.html">Sign out</a></li>
+                    <li class="unauth"><a href="/signin.html">Sign-In</a></li>
+                    <li class="unauth"><a href="/register.html">Register</a></li>
+                    <li class="unauth"><a href="/verify.html">Verify</a></li>
+                    <li class="auth"><a id="signOut" href="/signin.html">Sign out</a></li>
                   </ul>
               </li>
 
@@ -94,14 +94,13 @@
     </div> <!-- /container -->
 
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/js/vendor/jquery-3.1.0.js"></script>
-    <script src="/js/vendor/bootstrap.min.js"></script>
-    <script src="/js/vendor/docs.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="/js/vendor/ie10-viewport-bug-workaround.js"></script>
+    <script src="js/vendor/jquery-3.1.0.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/vendor/aws-cognito-sdk.min.js"></script>
+    <script src="js/vendor/amazon-cognito-identity.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/cognito-auth.js"></script>
 
 
   </body>

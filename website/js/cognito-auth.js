@@ -111,9 +111,29 @@ var Dashboard = window.Dashboard || {};
      */
 
     $(function onDocReady() {
+
+        // Hook up form submissions to functions
         $('#signinForm').submit(handleSignin);
         $('#registrationForm').submit(handleRegister);
         $('#verifyForm').submit(handleVerify);
+
+        // Hook up signout button
+        $('#signOut').click(function() {
+          Dashboard.signOut();
+          window.location.href = signinUrl;
+        });
+
+        // Hide or show the right User dropdown items depending on authentication status.
+        Dashboard.authToken.then(function(token) {
+            if (token) {
+              $(".unauth").hide();
+              $(".auth").show();
+            } else {
+              $(".unauth").show();
+              $(".auth").hide();
+            }
+        });
+        
     });
 
     function handleSignin(event) {

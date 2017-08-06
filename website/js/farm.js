@@ -122,26 +122,7 @@ var authToken;
   }, TIME_BETWEEN_COUNT_UPDATE_MS);
 
 
-
-  function displayUpdate(text) {
-      $('#updates').append($('<li>' + text + '</li>'));
-  }
-
   $(function init() {
-      $('#signOut').click(function() {
-        Dashboard.signOut();
-        window.location.href = '/signin.html';
-      });
-
-      Dashboard.authToken.then(function updateAuthMessage(token) {
-          if (token) {
-              displayUpdate('You are authenticated. Click to see your <a href="#authTokenModal" data-toggle="modal">auth token</a>.');
-              $('.authToken').text(token);
-          } else {
-            console.log("No auth token!");
-          }
-      });
-
       if (!_config.api.invokeUrl) {
           $('#noApiMessage').show();
       }
